@@ -1,11 +1,12 @@
 {
-  "name": "q",
+  "name": "beautyfetch",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
+    "build:vercel": "tsc && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -87,7 +88,7 @@
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
   },
-  "description": "## Project info",
+  "description": "Premium Beauty Products Marketplace",
   "main": "eslint.config.js",
   "author": "",
   "license": "ISC"
