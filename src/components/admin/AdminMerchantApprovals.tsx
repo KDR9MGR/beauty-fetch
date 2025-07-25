@@ -60,7 +60,6 @@ const AdminMerchantApprovals = () => {
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [reviewNotes, setReviewNotes] = useState('');
   const [reviewStatus, setReviewStatus] = useState<'approved' | 'rejected' | 'needs_info'>('approved');
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchApplications();
@@ -68,9 +67,6 @@ const AdminMerchantApprovals = () => {
 
   const fetchApplications = async () => {
     try {
-      setError(null);
-      setLoading(true);
-
       // Fetch merchant applications
       const { data: merchantData, error: merchantError } = await supabase
         .from('merchant_applications')
@@ -81,36 +77,31 @@ const AdminMerchantApprovals = () => {
 
       // Transform merchant data
       const formattedMerchantData: MerchantApplication[] = (merchantData || []).map(app => {
-        try {
-          const address = typeof app.business_address === 'string'
-            ? JSON.parse(app.business_address)
-            : app.business_address || { street: '', city: '', state: '', zip_code: '' };
+        const address = typeof app.business_address === 'string'
+          ? JSON.parse(app.business_address)
+          : app.business_address;
 
-          return {
-            id: app.id,
-            first_name: app.contact_person_first_name || '',
-            last_name: app.contact_person_last_name || '',
-            email: app.email || '',
-            phone: app.phone || '',
-            status: (app.status as MerchantApplication['status']) || 'pending',
-            created_at: app.created_at || new Date().toISOString(),
-            business_name: app.business_name || '',
-            business_type: app.business_type || '',
-            business_description: app.business_description,
-            business_license_number: app.business_license_number,
-            tax_id: app.tax_id,
-            business_address: {
-              street: address.street || '',
-              city: address.city || '',
-              state: address.state || '',
-              zip_code: address.zip_code || ''
-            }
-          };
-        } catch (err) {
-          console.error('Error processing merchant application:', err);
-          return null;
-        }
-      }).filter(Boolean) as MerchantApplication[];
+        return {
+          id: app.id,
+          first_name: app.contact_person_first_name,
+          last_name: app.contact_person_last_name,
+          email: app.email,
+          phone: app.phone,
+          status: app.status as MerchantApplication['status'],
+          created_at: app.created_at,
+          business_name: app.business_name,
+          business_type: app.business_type,
+          business_description: app.business_description,
+          business_license_number: app.business_license_number,
+          tax_id: app.tax_id,
+          business_address: {
+            street: address?.street || '',
+            city: address?.city || '',
+            state: address?.state || '',
+            zip_code: address?.zip_code || ''
+          }
+        };
+      });
 
       setMerchantApplications(formattedMerchantData);
 
@@ -123,46 +114,21 @@ const AdminMerchantApprovals = () => {
       if (driverError) throw driverError;
 
       // Transform driver data
-      const formattedDriverData: DriverApplication[] = (driverData || []).map(app => {
-        try {
-          const vehicleInfo = typeof app.vehicle_info === 'string'
-            ? JSON.parse(app.vehicle_info)
-            : app.vehicle_info || { make: '', model: '', year: '', plate: '' };
-
-          const documents = typeof app.documents === 'string'
-            ? JSON.parse(app.documents)
-            : app.documents || { drivers_license: null, insurance: null, vehicle_registration: null };
-
-          return {
-            id: app.id,
-            first_name: app.first_name || '',
-            last_name: app.last_name || '',
-            email: app.email || '',
-            phone: app.phone || '',
-            status: (app.status as DriverApplication['status']) || 'pending',
-            created_at: app.created_at || new Date().toISOString(),
-            vehicle_info: {
-              make: vehicleInfo.make || '',
-              model: vehicleInfo.model || '',
-              year: vehicleInfo.year || '',
-              plate: vehicleInfo.plate || ''
-            },
-            documents: {
-              drivers_license: documents.drivers_license,
-              insurance: documents.insurance,
-              vehicle_registration: documents.vehicle_registration
-            }
-          };
-        } catch (err) {
-          console.error('Error processing driver application:', err);
-          return null;
-        }
-      }).filter(Boolean) as DriverApplication[];
+      const formattedDriverData: DriverApplication[] = (driverData || []).map(app => ({
+        id: app.id,
+        first_name: app.first_name,
+        last_name: app.last_name,
+        email: app.email,
+        phone: app.phone,
+        status: app.status as DriverApplication['status'],
+        created_at: app.created_at,
+        vehicle_info: app.vehicle_info,
+        documents: app.documents
+      }));
 
       setDriverApplications(formattedDriverData);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error fetching applications:', error);
-      setError(error.message);
       toast.error('Failed to fetch applications');
     } finally {
       setLoading(false);
@@ -170,16 +136,10 @@ const AdminMerchantApprovals = () => {
   };
 
   const handleReview = (application: Application) => {
-    try {
-      setSelectedApplication(application);
-      setReviewNotes('');
-      setReviewStatus('approved');
-      setReviewDialogOpen(true);
-      setError(null);
-    } catch (err) {
-      console.error('Error handling review:', err);
-      toast.error('Failed to open review dialog');
-    }
+    setSelectedApplication(application);
+    setReviewNotes('');
+    setReviewStatus('approved');
+    setReviewDialogOpen(true);
   };
 
   const submitReview = async () => {
@@ -187,7 +147,6 @@ const AdminMerchantApprovals = () => {
 
     try {
       setLoading(true);
-      setError(null);
 
       const isDriver = 'vehicle_info' in selectedApplication;
       const tableName = isDriver ? 'driver_applications' : 'merchant_applications';
@@ -226,7 +185,7 @@ const AdminMerchantApprovals = () => {
           // Create or update user profile
           const { error: profileError } = await supabase
             .from('profiles')
-            .upsert({
+            .insert({
               id: authData.user.id,
               role: isDriver ? 'driver' : 'store_owner',
               first_name: selectedApplication.first_name,
@@ -245,19 +204,18 @@ const AdminMerchantApprovals = () => {
             .eq('id', selectedApplication.id);
 
           // For merchants, create store
-          if (!isDriver && 'business_name' in selectedApplication) {
-            const merchantApp = selectedApplication as MerchantApplication;
+          if (!isDriver) {
             const { error: storeError } = await supabase
               .from('stores')
               .insert({
                 owner_id: authData.user.id,
-                name: merchantApp.business_name,
-                slug: merchantApp.business_name.toLowerCase().replace(/\s+/g, '-'),
-                description: merchantApp.business_description,
-                address: merchantApp.business_address,
+                name: selectedApplication.business_name,
+                slug: selectedApplication.business_name.toLowerCase().replace(/\s+/g, '-'),
+                description: selectedApplication.business_description,
+                address: selectedApplication.business_address,
                 contact_info: {
-                  email: merchantApp.email,
-                  phone: merchantApp.phone
+                  email: selectedApplication.email,
+                  phone: selectedApplication.phone
                 },
                 business_hours: {},
                 status: 'active'
@@ -305,10 +263,9 @@ const AdminMerchantApprovals = () => {
 
       toast.success('Review submitted successfully');
       setReviewDialogOpen(false);
-      await fetchApplications();
-    } catch (error: any) {
+      fetchApplications();
+    } catch (error) {
       console.error('Error submitting review:', error);
-      setError(error.message);
       toast.error('Failed to submit review');
     } finally {
       setLoading(false);
@@ -468,13 +425,6 @@ const AdminMerchantApprovals = () => {
 
   return (
     <div className="space-y-6">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">
-          <strong className="font-bold">Error: </strong>
-          <span className="block sm:inline">{error}</span>
-        </div>
-      )}
-      
       <Tabs defaultValue="merchants">
         <TabsList>
           <TabsTrigger value="merchants" className="flex items-center gap-2">

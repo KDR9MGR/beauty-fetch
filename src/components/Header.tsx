@@ -60,160 +60,192 @@ const Header = () => {
 
   return (
     <>
-    <header className="bg-white shadow-sm">
       <DeliveryAnnouncementBanner />
+      <header className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo and Navigation */}
-          <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-pink-600">BeautyFetch</h1>
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <Link to="/" className="text-2xl font-bold text-pink-600">
+              BeautyFetch
             </Link>
-            <nav className="hidden md:ml-8 md:flex md:space-x-8">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium"
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </nav>
           </div>
 
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-8">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+
           {/* Search Bar */}
-          <div className="flex-1 max-w-lg mx-8 hidden md:block">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
-              </div>
+          <div className="hidden md:flex flex-1 max-w-md mx-8">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
                 type="search"
                 placeholder="Search products, brands..."
-                className="pl-10"
+                className="pl-10 pr-4 w-full"
               />
             </div>
           </div>
 
-          {/* User Actions */}
+          {/* Right side icons */}
           <div className="flex items-center space-x-4">
             {showLoading ? (
-              <div className="animate-pulse flex space-x-4">
-                <div className="h-8 w-20 bg-gray-200 rounded"></div>
-              </div>
-            ) : user ? (
-              <>
-                {/* Admin/Merchant/Driver buttons */}
-                {profile?.role === "admin" && (
-                  <Link to="/admin">
-                    <Button variant="outline" size="sm">
-                      <Shield className="h-4 w-4 mr-2" />
-                      Admin
-                    </Button>
-                  </Link>
-                )}
-                
-                {profile?.role === "store_owner" && (
-                  <Link to="/merchant">
-                    <Button variant="outline" size="sm">
-                      <Package className="h-4 w-4 mr-2" />
-                      Merchant
-                    </Button>
-                  </Link>
-                )}
-                
-                {profile?.role === "driver" && (
-                  <Link to="/driver-dashboard">
-                    <Button variant="outline" size="sm">
-                      <Package className="h-4 w-4 mr-2" />
-                      Driver
-                    </Button>
-                  </Link>
-                )}
-                
-                <CartIcon />
-                
-                {/* User Profile Dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="relative">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={profile?.avatar_url || undefined} />
-                        <AvatarFallback>{getInitials(profile?.first_name, profile?.last_name, user?.email)}</AvatarFallback>
-                      </Avatar>
-                      <ChevronDown className="ml-2 h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuLabel>{getUserDisplayName()}</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <Link to="/profile">
-                      <DropdownMenuItem>
-                        <User className="mr-2 h-4 w-4" />
-                        Profile
-                      </DropdownMenuItem>
-                    </Link>
-                    <Link to="/profile/orders">
-                      <DropdownMenuItem>
-                        <Package className="mr-2 h-4 w-4" />
-                        Orders
-                      </DropdownMenuItem>
-                    </Link>
-                    <Link to="/profile/addresses">
-                      <DropdownMenuItem>
-                        <MapPin className="mr-2 h-4 w-4" />
-                        Addresses
-                      </DropdownMenuItem>
-                    </Link>
-                    <Link to="/profile/payment">
-                      <DropdownMenuItem>
-                        <CreditCard className="mr-2 h-4 w-4" />
-                        Payment Methods
-                      </DropdownMenuItem>
-                    </Link>
-                    <Link to="/profile/wishlist">
-                      <DropdownMenuItem>
-                        <Heart className="mr-2 h-4 w-4" />
-                        Wishlist
-                      </DropdownMenuItem>
-                    </Link>
-                    <Link to="/profile/settings">
-                      <DropdownMenuItem>
-                        <Settings className="mr-2 h-4 w-4" />
-                        Settings
-                      </DropdownMenuItem>
-                    </Link>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Logout
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-pink-600"></div>
             ) : (
               <>
-                <div className="flex items-center gap-2">
-                  <Link to="/auth">
-                    <Button variant="outline" size="sm" className="min-w-[90px]">
-                      <User className="h-4 w-4 mr-2" />
-                      Sign In
-                    </Button>
-                  </Link>
-                  <Link to="/merchant/auth">
-                    <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800">
-                      Merchant
-                    </Button>
-                  </Link>
-                  <Link to="/driver/auth">
-                    <Button variant="ghost" size="sm" className="text-green-600 hover:text-green-800">
-                      Driver
-                    </Button>
-                  </Link>
-                </div>
-                
-                <CartIcon />
+                {user ? (
+                  <>
+                    {/* Show admin button for admin users */}
+                    {profile?.role === "admin" && (
+                      <Link to="/admin">
+                        <Button variant="outline" size="sm">
+                          <Shield className="h-4 w-4 mr-2" />
+                          Admin
+                        </Button>
+                      </Link>
+                    )}
+                    
+                    {/* Show merchant button for store owners */}
+                    {profile?.role === "store_owner" && (
+                      <Link to="/merchant">
+                        <Button variant="outline" size="sm">
+                          <Package className="h-4 w-4 mr-2" />
+                          Merchant
+                        </Button>
+                      </Link>
+                    )}
+                    
+                    {/* Show driver button for drivers */}
+                    {profile?.role === "driver" && (
+                      <Link to="/driver-dashboard">
+                        <Button variant="outline" size="sm">
+                          <Package className="h-4 w-4 mr-2" />
+                          Driver
+                        </Button>
+                      </Link>
+                    )}
+                    
+                    <CartIcon />
+                    
+                    {/* User Profile Dropdown */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={profile?.avatar_url} alt={getUserDisplayName()} />
+                            <AvatarFallback className="bg-beauty-purple text-white">
+                              {getInitials(profile?.first_name, profile?.last_name, user?.email)}
+                            </AvatarFallback>
+                          </Avatar>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-64" align="end" forceMount>
+                        <DropdownMenuLabel className="font-normal">
+                          <div className="flex flex-col space-y-1">
+                            <p className="text-sm font-medium leading-none">{getUserDisplayName()}</p>
+                            <p className="text-xs leading-none text-muted-foreground">
+                              {user?.email}
+                            </p>
+                            {profile?.role && (
+                              <p className="text-xs leading-none text-muted-foreground capitalize">
+                                Role: {profile.role.replace('_', ' ')}
+                              </p>
+                            )}
+                          </div>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link to="/profile" className="cursor-pointer">
+                            <User className="mr-2 h-4 w-4" />
+                            <span>Profile</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/profile/orders" className="cursor-pointer">
+                            <Package className="mr-2 h-4 w-4" />
+                            <span>Order History</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/profile/addresses" className="cursor-pointer">
+                            <MapPin className="mr-2 h-4 w-4" />
+                            <span>Addresses</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/profile/payment" className="cursor-pointer">
+                            <CreditCard className="mr-2 h-4 w-4" />
+                            <span>Payment Methods</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/profile/wishlist" className="cursor-pointer">
+                            <Heart className="mr-2 h-4 w-4" />
+                            <span>Wishlist</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/profile/settings" className="cursor-pointer">
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Settings</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        {/* Show admin link in dropdown for easier access */}
+                        {profile?.role === "admin" && (
+                          <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem asChild>
+                              <Link to="/admin" className="cursor-pointer">
+                                <Shield className="mr-2 h-4 w-4" />
+                                <span>Admin Dashboard</span>
+                              </Link>
+                            </DropdownMenuItem>
+                          </>
+                        )}
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          className="cursor-pointer text-red-600"
+                          onClick={handleLogout}
+                        >
+                          <LogOut className="mr-2 h-4 w-4" />
+                          <span>Log out</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Link to="/login">
+                        <Button variant="outline" size="sm">
+                          <User className="h-4 w-4 mr-2" />
+                          Sign In
+                        </Button>
+                      </Link>
+                      <Link to="/merchant/login">
+                        <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800">
+                          Merchant
+                        </Button>
+                      </Link>
+                      <Link to="/driver/login">
+                        <Button variant="ghost" size="sm" className="text-green-600 hover:text-green-800">
+                          Driver
+                        </Button>
+                      </Link>
+                    </div>
+                    
+                    <CartIcon />
+                  </>
+                )}
               </>
             )}
 
