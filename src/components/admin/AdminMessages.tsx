@@ -95,17 +95,11 @@ export const AdminMessages = () => {
 
       if (customerError) throw customerError;
 
-      // Fetch merchant messages
+      // Fetch merchant messages  
       const { data: merchantMessages, error: merchantError } = await supabase
         .from("merchant_messages")
         .select(`
           *,
-          profiles:merchant_id (
-            id,
-            first_name,
-            last_name,
-            email
-          ),
           stores:store_id (
             id,
             name
@@ -141,9 +135,9 @@ export const AdminMessages = () => {
             name: msg.stores.name
           } : null,
           merchant: {
-            id: msg.profiles?.id || '',
-            name: `${msg.profiles?.first_name} ${msg.profiles?.last_name}`,
-            email: msg.profiles?.email || ''
+            id: msg.sender_id || '',
+            name: 'Merchant User',
+            email: 'merchant@example.com'
           },
           replies: [],
           message_type: 'merchant'

@@ -70,7 +70,7 @@ interface DriverApplication {
   vehicle_model: string;
   vehicle_year: number;
   vehicle_plate: string;
-  vehicle_color: string | null;
+  vehicle_color?: string | null;
   emergency_contact_name: string | null;
   emergency_contact_phone: string | null;
   address: any;

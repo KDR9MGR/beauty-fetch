@@ -45,14 +45,16 @@ export function CartIcon() {
         <div className="max-h-96 overflow-y-auto">
           {state.items.map((item) => {
             const price = item.variant?.price || item.product.price;
-            const primaryImage = item.product.images.find(img => img.is_primary) || item.product.images[0];
+            // Handle images array - could be strings or objects
+            const images = item.product.images;
+            const primaryImage = Array.isArray(images) && images.length > 0 ? images[0] : null;
             
             return (
               <div key={item.id} className="p-4 border-b flex gap-3">
                 <div className="relative w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                   {primaryImage && (
                     <img
-                      src={primaryImage.image_url}
+                      src={typeof primaryImage === 'string' ? primaryImage : (primaryImage as any)?.image_url || '/placeholder.svg'}
                       alt={item.product.name}
                       className="w-full h-full object-cover"
                     />
