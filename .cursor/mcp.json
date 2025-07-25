@@ -1,0 +1,21 @@
+
+
+{
+    "mcpServers": {
+      "supabase": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@supabase/mcp-server-supabase@latest",
+          "--access-token",
+          "sbp_28751c47e11325a553ce399abdb30b00327c7d85"
+        ]
+      },
+      "browser-tools": {
+        "command": "npx",
+        "args": [
+          "@agentdeskai/browser-tools-mcp@1.2.0"
+        ]
+      }
+    }
+  }

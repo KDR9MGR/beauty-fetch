@@ -1,0 +1,6 @@
+name,slug,description,short_description,price,compare_price,sku,inventory_quantity,store_id,category_id,status,featured
+"Luxury Face Cream",luxury-face-cream,"Premium anti-aging face cream with retinol and hyaluronic acid","Anti-aging cream for smooth skin",89.99,119.99,LFC001,50,STORE_ID_HERE,CATEGORY_ID_HERE,active,true
+"Vitamin C Serum",vitamin-c-serum,"Brightening vitamin C serum for radiant skin","Brightening serum with vitamin C",45.99,59.99,VCS002,100,STORE_ID_HERE,CATEGORY_ID_HERE,active,false
+"Organic Lip Balm",organic-lip-balm,"Natural lip balm with organic ingredients","Moisturizing organic lip balm",12.99,,OLB003,200,STORE_ID_HERE,CATEGORY_ID_HERE,active,false
+"Eye Shadow Palette",eye-shadow-palette,"12-shade eyeshadow palette with matte and shimmer finishes","Professional eyeshadow palette",34.99,44.99,ESP004,75,STORE_ID_HERE,CATEGORY_ID_HERE,active,true
+"Foundation SPF 30",foundation-spf-30,"Full coverage foundation with sun protection","Foundation with SPF protection",28.99,35.99,FSP005,120,STORE_ID_HERE,CATEGORY_ID_HERE,active,false 
