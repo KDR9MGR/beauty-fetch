@@ -6,14 +6,58 @@ import { env } from '@/utils/env';
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient<Database>(env.supabaseUrl, env.supabaseAnonKey, {
-  db: {
-    schema: 'public'
-  },
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
-    flowType: 'pkce'
+let supabaseInstance: ReturnType<typeof createClient<Database>> | null = null;
+
+const createSupabaseClient = () => {
+  try {
+    if (!env.supabaseUrl || !env.supabaseAnonKey) {
+      console.error('Missing Supabase environment variables');
+      throw new Error('Supabase configuration is incomplete');
+    }
+
+    const client = createClient<Database>(env.supabaseUrl, env.supabaseAnonKey, {
+      db: {
+        schema: 'public'
+      },
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+        flowType: 'pkce'
+      },
+      realtime: {
+        params: {
+          eventsPerSecond: 10
+        }
+      },
+      global: {
+        headers: {
+          'X-Client-Info': 'beautyfetch-web'
+        }
+      }
+    });
+
+    return client;
+  } catch (error) {
+    console.error('Failed to initialize Supabase client:', error);
+    throw error;
+  }
+};
+
+// Lazy initialization with error handling
+export const supabase = new Proxy({} as ReturnType<typeof createClient<Database>>, {
+  get(target, prop) {
+    if (!supabaseInstance) {
+      try {
+        supabaseInstance = createSupabaseClient();
+      } catch (error) {
+        console.error('Supabase initialization failed:', error);
+        // Return a mock client that throws meaningful errors
+        return () => {
+          throw new Error('Supabase is not available. Please check your configuration.');
+        };
+      }
+    }
+    return supabaseInstance[prop as keyof typeof supabaseInstance];
   }
 });

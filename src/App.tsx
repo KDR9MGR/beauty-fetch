@@ -9,7 +9,7 @@ import { LocationProvider } from "@/contexts/LocationContext";
 import { LocationPermissionModal } from "@/components/LocationPermissionModal";
 import { useLocation } from "@/contexts/LocationContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import HealthCheck from "@/components/HealthCheck";
+// import HealthCheck from "@/components/HealthCheck"; // Temporarily disabled
 import Index from "./pages/Index";
 import Store from "./pages/Store";
 import Stores from "./pages/Stores";
@@ -96,7 +96,7 @@ const App = () => (
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
-              <HealthCheck />
+              {/* <HealthCheck /> Temporarily disabled to avoid Supabase connection issues */}
             </TooltipProvider>
           </LocationProvider>
         </CartProvider>
