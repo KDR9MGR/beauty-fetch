@@ -122,8 +122,17 @@ const AdminMerchantApprovals = () => {
         phone: app.phone,
         status: app.status as DriverApplication['status'],
         created_at: app.created_at,
-        vehicle_info: app.vehicle_info,
-        documents: app.documents
+        vehicle_info: {
+          make: app.vehicle_make || '',
+          model: app.vehicle_model || '',
+          year: app.vehicle_year?.toString() || '',
+          plate: app.vehicle_plate || ''
+        },
+        documents: {
+          drivers_license: app.driver_license_number || null,
+          insurance: null, // Not available in current schema
+          vehicle_registration: null // Not available in current schema
+        }
       }));
 
       setDriverApplications(formattedDriverData);
@@ -197,12 +206,6 @@ const AdminMerchantApprovals = () => {
 
           if (profileError) throw profileError;
 
-          // Update application with user_id
-          await supabase
-            .from(tableName)
-            .update({ user_id: authData.user.id })
-            .eq('id', selectedApplication.id);
-
           // For merchants, create store
           if (!isDriver) {
             const { error: storeError } = await supabase
@@ -222,19 +225,6 @@ const AdminMerchantApprovals = () => {
               });
 
             if (storeError) throw storeError;
-          }
-
-          // For drivers, create driver status
-          if (isDriver) {
-            const { error: statusError } = await supabase
-              .from('driver_status')
-              .insert({
-                driver_id: authData.user.id,
-                is_online: false,
-                last_updated: new Date().toISOString()
-              });
-
-            if (statusError) throw statusError;
           }
 
           // Send password reset email
