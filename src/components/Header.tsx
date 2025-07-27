@@ -13,12 +13,12 @@ import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, profile, loading, initialized } = useAuth();
+  const { user, profile, loading, initialized, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await signOut();
     toast({
       title: "Logged out",
       description: "You have been successfully logged out",
@@ -225,7 +225,7 @@ const Header = () => {
                 ) : (
                   <>
                     <div className="flex items-center gap-2">
-                      <Link to="/login">
+                      <Link to="/auth">
                         <Button variant="outline" size="sm">
                           <User className="h-4 w-4 mr-2" />
                           Sign In
