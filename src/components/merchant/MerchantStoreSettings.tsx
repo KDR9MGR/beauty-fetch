@@ -90,12 +90,20 @@ export const MerchantStoreSettings = () => {
   });
   const [pendingUpdates, setPendingUpdates] = useState<StoreUpdate[]>([]);
   const [showPromotionDialog, setShowPromotionDialog] = useState(false);
-  const [newPromotion, setNewPromotion] = useState({
+  const [newPromotion, setNewPromotion] = useState<{
+    title: string;
+    description: string;
+    startDate: string;
+    endDate: string;
+    discountType: 'percentage' | 'fixed';
+    discountValue: number;
+    isActive: boolean;
+  }>({
     title: '',
     description: '',
     startDate: '',
     endDate: '',
-    discountType: 'percentage' as const,
+    discountType: 'percentage',
     discountValue: 0,
     isActive: true
   });
@@ -561,7 +569,7 @@ export const MerchantStoreSettings = () => {
                             value={newPromotion.discountType}
                             onChange={(e) => setNewPromotion({
                               ...newPromotion,
-                              discountType: e.target.value === 'fixed' ? 'fixed' : 'percentage'
+                              discountType: e.target.value as 'fixed' | 'percentage'
                             })}
                           >
                             <option value="percentage">Percentage</option>

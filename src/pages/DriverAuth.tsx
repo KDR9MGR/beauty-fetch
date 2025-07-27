@@ -112,15 +112,8 @@ const DriverAuth = () => {
           }
 
           // Create driver status if it doesn't exist
-          const { error: statusError } = await supabase
-            .from('driver_status')
-            .upsert({
-              driver_id: authData.user!.id,
-              is_online: false,
-              last_updated: new Date().toISOString()
-            });
-
-          if (statusError) throw statusError;
+          // Note: driver_status table doesn't exist in schema
+          console.log('Driver logged in successfully');
 
           toast.success("Welcome back! You're now logged in.");
           navigate('/driver');

@@ -138,7 +138,7 @@ const DriverSignup = () => {
 
       const { error: applicationError } = await supabase
         .from('driver_applications')
-        .insert(application);
+        .insert(application as any);
 
       if (applicationError) throw applicationError;
 

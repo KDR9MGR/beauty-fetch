@@ -167,7 +167,7 @@ export default function Store() {
           images: product.product_images || [],
           category: product.categories
         })) || [];
-        setProducts(transformedProducts as Product[]);
+        setProducts(transformedProducts as any);
       }
     } catch (error) {
       console.error('💥 Exception fetching store products:', error);

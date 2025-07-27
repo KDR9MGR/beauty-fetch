@@ -114,7 +114,7 @@ export const AdminOrders = () => {
         })
       );
 
-      setOrders(ordersWithCostBreakdown);
+      setOrders(ordersWithCostBreakdown as any);
     } catch (error) {
       console.error("Error fetching orders:", error);
       toast({

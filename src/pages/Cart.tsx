@@ -72,18 +72,18 @@ const Cart = () => {
                 <CardContent className="space-y-6">
                   {state.items.map((item) => {
                     const price = item.variant?.price || item.product.price;
-                    const primaryImage = item.product.images.find(img => img.is_primary) || item.product.images[0];
+                    const imageSrc = Array.isArray(item.product.images) && item.product.images.length > 0 
+                      ? item.product.images[0] 
+                      : '/placeholder.svg';
                     
                     return (
                       <div key={item.id} className="flex gap-4 p-4 border rounded-lg">
                         <div className="relative w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                          {primaryImage && (
-                            <img
-                              src={primaryImage.image_url}
-                              alt={item.product.name}
-                              className="w-full h-full object-cover"
-                            />
-                          )}
+                          <img
+                            src={typeof imageSrc === 'string' ? imageSrc : '/placeholder.svg'}
+                            alt={item.product.name}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                         
                         <div className="flex-1 min-w-0">

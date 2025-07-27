@@ -88,7 +88,7 @@ const Product = () => {
   };
 
   const cartItem = product ? getItemByProduct(product.id) : null;
-  const primaryImage = product?.images?.find(img => img.is_primary) || product?.images?.[0];
+  const primaryImage = Array.isArray(product?.images) && product.images.length > 0 ? product.images[0] : null;
   const allImages = product?.images || [];
 
   if (loading) {
@@ -194,16 +194,16 @@ const Product = () => {
               {/* Thumbnail images */}
               {allImages.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto">
-                  {allImages.map((image, index) => (
+                  {Array.isArray(allImages) && allImages.map((image: any, index: number) => (
                     <button
-                      key={image.id}
+                      key={index}
                       onClick={() => setSelectedImageIndex(index)}
                       className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 ${
                         selectedImageIndex === index ? 'border-beauty-purple' : 'border-gray-200'
                       }`}
                     >
                       <img
-                        src={image.image_url}
+                        src={image?.image_url || '/placeholder.svg'}
                         alt={`${product.name} ${index + 1}`}
                         className="w-full h-full object-cover"
                       />

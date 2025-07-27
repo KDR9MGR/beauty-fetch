@@ -55,8 +55,8 @@ const Header = () => {
     { name: "Explore", href: "/explore" },
   ];
 
-  // Show loading state only during initial load
-  const showLoading = loading && !initialized;
+  // Show loading state only during initial load, but not if we already have user data
+  const showLoading = loading && !initialized && !user;
 
   return (
     <>

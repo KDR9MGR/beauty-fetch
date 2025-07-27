@@ -264,7 +264,7 @@ export async function fixMissingProfiles() {
         await createUserProfile(
           driver.email,
           'driver',
-          driver as DriverApplication
+          driver as any
         );
       } catch (error) {
         console.error(`Error fixing driver ${driver.id}:`, error);

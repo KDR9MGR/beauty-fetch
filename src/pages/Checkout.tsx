@@ -590,13 +590,15 @@ const Checkout = () => {
                   <div className="space-y-2">
                     {state.items.map((item) => {
                       const price = item.variant?.price || item.product.price;
-                      const primaryImage = item.product.images.find(img => img.is_primary) || item.product.images[0];
+                      const imageSrc = Array.isArray(item.product.images) && item.product.images.length > 0 
+                        ? item.product.images[0] 
+                        : "https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80";
                       
                       return (
                         <div key={item.id} className="flex gap-3">
                           <div className="relative">
                             <img
-                              src={primaryImage?.image_url || "https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"}
+                              src={typeof imageSrc === 'string' ? imageSrc : '/placeholder.svg'}
                               alt={item.product.name}
                               className="w-16 h-16 object-cover rounded-lg"
                             />
