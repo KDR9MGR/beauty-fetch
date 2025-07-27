@@ -22,11 +22,11 @@ interface OrderWithDetails {
   fraud_risk_level: string;
   is_archived: boolean;
   created_at: string;
-  profiles?: {
-    first_name: string | null;
-    last_name: string | null;
-    email: string | null;
-  } | null;
+  profiles: {
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
   order_items: {
     id: string;
     quantity: number;

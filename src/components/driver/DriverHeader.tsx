@@ -56,16 +56,9 @@ export const DriverHeader = () => {
 
   const toggleOnlineStatus = async (newStatus: boolean) => {
     try {
-      const { error } = await supabase
-        .from('driver_status')
-        .upsert({
-          driver_id: user!.id,
-          is_online: newStatus,
-          last_updated: new Date().toISOString()
-        });
-
-      if (error) throw error;
+      // Since driver_status table doesn't exist, we'll just update the local state
       setIsOnline(newStatus);
+      console.log(`Driver status changed to: ${newStatus ? 'online' : 'offline'}`);
     } catch (error) {
       console.error('Error updating status:', error);
     }

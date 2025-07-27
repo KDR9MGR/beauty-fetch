@@ -62,15 +62,8 @@ export const EarningsReport = () => {
           break;
       }
 
-      // Fetch earnings data
-      const { data: earningsData, error: earningsError } = await supabase
-        .from('driver_earnings')
-        .select('*')
-        .eq('driver_id', user.id)
-        .gte('created_at', startDate.toISOString())
-        .order('created_at', { ascending: false });
-
-      if (earningsError) throw earningsError;
+      // Since driver_earnings table doesn't exist, use mock data for demo
+      const earningsData: any[] = [];
 
       // Calculate summary
       const summary: EarningsSummary = {

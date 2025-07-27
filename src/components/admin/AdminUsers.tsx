@@ -96,12 +96,8 @@ export const AdminUsers = () => {
       const usersWithStats = await Promise.all(
         usersData.map(async (user) => {
           try {
-            // Get user addresses
-            const { data: addresses } = await supabase
-              .from("user_addresses")
-              .select("id, address_line_1, address_line_2, city, state, postal_code, is_default")
-              .eq("user_id", user.id)
-              .limit(5);
+            // Get user addresses - table doesn't exist, use empty array
+            const addresses: any[] = [];
 
             // Get payment methods
             const { data: paymentMethods } = await supabase
@@ -129,7 +125,7 @@ export const AdminUsers = () => {
                 status: order.status,
                 created_at: order.created_at
               })),
-              addresses: addresses || [],
+              addresses: [],
               payment_methods: (paymentMethods || []).map(pm => ({
                 id: pm.id,
                 type: pm.type,

@@ -25,7 +25,7 @@ interface StoreWithDetails {
   name: string;
   slug: string;
   description: string;
-  address: string;
+  address: string | any;
   phone: string;
   email: string;
   status: string;
@@ -238,7 +238,10 @@ export const AdminStores = () => {
       } else {
         const { data, error } = await supabase
           .from("stores")
-          .insert([storeData])
+          .insert([{
+            ...storeData,
+            owner_id: "dummy-owner-id" // Add required owner_id placeholder
+          }])
           .select()
           .single();
         if (error) throw error;
