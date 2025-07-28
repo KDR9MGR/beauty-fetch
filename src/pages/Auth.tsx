@@ -46,8 +46,9 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      console.log('Admin login attempt:', { email }); // Debug log
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.trim(),
         password,
       });
 
